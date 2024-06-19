@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     var countries = [String]()
     var score = 0
     var correctAnswer = 0
+    var questionsAnswered = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,8 @@ class ViewController: UIViewController {
     }
 
     func askQuestion(action: UIAlertAction! = nil) {
+        questionsAnswered += 1
+        
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         
@@ -44,25 +47,34 @@ class ViewController: UIViewController {
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         
-        title = countries[correctAnswer].uppercased()
+        title = "\(countries[correctAnswer].uppercased()) - score: \(score)"
     }
     
     
     @IBAction func buttonTapped(_ sender: UIButton) {
         var title: String
+        var alertController: UIAlertController
         
         if sender.tag == correctAnswer {
-            title = "Correct"
+            title = "Correct!"
             score += 1
         } else {
-            title = "Wrong"
+            title = "Wrong! That's the flag of \(countries[sender.tag].uppercased())"
             score -= 1
         }
         
-        let ac = UIAlertController(title: title, message: "Your score is \(score)", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+        if questionsAnswered == 10 {
+            alertController = UIAlertController(title: title, message: "Your final score is \(score)", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Play again", style: .default, handler: askQuestion))
+            
+            score = 0
+            questionsAnswered = 0
+        } else {
+            alertController = UIAlertController(title: title, message: "Your score is \(score)", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+        }
         
-        present(ac, animated: true)
+        present(alertController, animated: true)
     }
 }
 
