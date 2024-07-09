@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Project2
+//  Project6
 //
 //  Created by Enzo Rossetto on 11/06/24.
 //
